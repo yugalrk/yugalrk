@@ -1,0 +1,130 @@
+{
+  "summary": {
+    "created_at": "2021-07-15T14:44:53Z",
+    "followers": 2,
+    "repos": 23,
+    "stars": 7,
+    "contributed": 0,
+    "commits": 148,
+    "additions": 7162968,
+    "deletions": 7077064,
+    "loc": 85904
+  },
+  "repos": {
+    "yugalrk/ds-cheatsheets": {
+      "c": 0,
+      "a": 0,
+      "d": 0
+    },
+    "yugalrk/project-based-learning": {
+      "c": 0,
+      "a": 0,
+      "d": 0
+    },
+    "yugalrk/Colab-work": {
+      "c": 3,
+      "a": 2081,
+      "d": 0
+    },
+    "yugalrk/CVP": {
+      "c": 5,
+      "a": 4516,
+      "d": 1
+    },
+    "yugalrk/Dataset-extension": {
+      "c": 4,
+      "a": 892,
+      "d": 52
+    },
+    "yugalrk/es-fine-tuning-paper": {
+      "c": 0,
+      "a": 0,
+      "d": 0
+    },
+    "yugalrk/ESP": {
+      "c": 4,
+      "a": 31379,
+      "d": 239
+    },
+    "yugalrk/Evolution-Strategies": {
+      "c": 15,
+      "a": 2195,
+      "d": 1177
+    },
+    "yugalrk/HealthBuddy": {
+      "c": 7,
+      "a": 7356,
+      "d": 584
+    },
+    "yugalrk/Image-Data-Generator": {
+      "c": 3,
+      "a": 125,
+      "d": 0
+    },
+    "yugalrk/Image-gen": {
+      "c": 2,
+      "a": 1018,
+      "d": 0
+    },
+    "yugalrk/LiveKit": {
+      "c": 3,
+      "a": 183,
+      "d": 15
+    },
+    "yugalrk/made-template": {
+      "c": 45,
+      "a": 3331,
+      "d": 376
+    },
+    "yugalrk/RemoteScanning": {
+      "c": 13,
+      "a": 6397,
+      "d": 1020
+    },
+    "yugalrk/reward-triage-agent": {
+      "c": 5,
+      "a": 3778,
+      "d": 188
+    },
+    "yugalrk/Robotics--VLA-training": {
+      "c": 4,
+      "a": 13813,
+      "d": 8507
+    },
+    "yugalrk/RRA": {
+      "c": 5,
+      "a": 8612,
+      "d": 181
+    },
+    "yugalrk/RSU": {
+      "c": 4,
+      "a": 1336,
+      "d": 0
+    },
+    "yugalrk/RSU-3": {
+      "c": 1,
+      "a": 1187,
+      "d": 0
+    },
+    "yugalrk/siemens_chatbot": {
+      "c": 0,
+      "a": 0,
+      "d": 0
+    },
+    "yugalrk/VLM-Training": {
+      "c": 21,
+      "a": 7074203,
+      "d": 7064654
+    },
+    "yugalrk/yoga-pose-detection": {
+      "c": 0,
+      "a": 0,
+      "d": 0
+    },
+    "yugalrk/yugalrk": {
+      "c": 4,
+      "a": 566,
+      "d": 70
+    }
+  }
+}
