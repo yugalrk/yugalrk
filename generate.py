@@ -67,50 +67,45 @@ def _request(url, token, body=None):
         return resp.status, (json.loads(raw) if raw else None)
 
 
-GRAPHQL = """
-query($login: String!, $cursor: String) {
+CONTRIBUTED = """
+query($login: String!) {
   user(login: $login) {
-    createdAt
-    followers { totalCount }
     repositoriesContributedTo(first: 1, contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]) { totalCount }
-    repositories(first: 100, after: $cursor, ownerAffiliations: OWNER) {
-      totalCount
-      pageInfo { hasNextPage endCursor }
-      nodes { nameWithOwner stargazerCount }
-    }
   }
 }
 """
 
 
-def fetch_profile(login, token):
-    cursor, repos, info = None, [], {}
+def fetch_profile(login, token, cached):
+    _, user = _request(f"{API}/users/{login}", token)
+    repos, page = [], 1
     while True:
-        _, out = _request(f"{API}/graphql", token,
-                          {"query": GRAPHQL, "variables": {"login": login, "cursor": cursor}})
-        if out.get("errors"):
-            raise RuntimeError(out["errors"])
-        user = out["data"]["user"]
-        info = {
-            "created_at": user["createdAt"],
-            "followers": user["followers"]["totalCount"],
-            "contributed": user["repositoriesContributedTo"]["totalCount"],
-            "repos": user["repositories"]["totalCount"],
-        }
-        repos += user["repositories"]["nodes"]
-        page = user["repositories"]["pageInfo"]
-        if not page["hasNextPage"]:
+        _, batch = _request(f"{API}/users/{login}/repos?type=owner&per_page=100&page={page}", token)
+        repos += batch
+        if len(batch) < 100:
             break
-        cursor = page["endCursor"]
-    info["stars"] = sum(r["stargazerCount"] for r in repos)
-    return info, [r["nameWithOwner"] for r in repos]
+        page += 1
+    info = {
+        "created_at": user["created_at"],
+        "followers": user["followers"],
+        "repos": len(repos),
+        "stars": sum(r["stargazers_count"] for r in repos),
+        "contributed": cached.get("contributed", 0),
+    }
+    try:   # only available through GraphQL; keep the last value if it fails
+        _, out = _request(f"{API}/graphql", token,
+                          {"query": CONTRIBUTED, "variables": {"login": login}})
+        info["contributed"] = out["data"]["user"]["repositoriesContributedTo"]["totalCount"]
+    except Exception as err:
+        print(f"  contributed count unavailable ({err})", file=sys.stderr)
+    return info, [r["full_name"] for r in repos]
 
 
 def fetch_code_stats(login, repos, token, cached):
     """Commits / additions / deletions by `login` per repo (GitHub's contributor stats)."""
     result = {}
     pending = list(repos)
-    for attempt in range(8):
+    for attempt in range(10):         # first-time stats can take GitHub a few minutes
         still = []
         for repo in pending:
             try:
@@ -131,10 +126,13 @@ def fetch_code_stats(login, repos, token, cached):
         pending = still
         if not pending:
             break
-        time.sleep(4 + 2 * attempt)
+        print(f"  waiting for GitHub to compute stats for {len(pending)} repo(s)...")
+        time.sleep(min(5 + 3 * attempt, 30))
     for repo in repos:                 # fall back to the cache for anything missing
         if repo not in result and repo in cached:
             result[repo] = cached[repo]
+    if pending:
+        print(f"  still pending, using cached values: {', '.join(pending)}", file=sys.stderr)
     return result
 
 
@@ -152,7 +150,7 @@ def update_stats(login, offline):
             print("No GITHUB_TOKEN set, rendering from cache.", file=sys.stderr)
         return cache["summary"]
     try:
-        info, repos = fetch_profile(login, token)
+        info, repos = fetch_profile(login, token, cache.get("summary", {}))
         per_repo = fetch_code_stats(login, repos, token, cache.get("repos", {}))
     except Exception as err:  # keep yesterday's numbers rather than failing the run
         print(f"GitHub API failed ({err}), rendering from cache.", file=sys.stderr)
@@ -161,6 +159,7 @@ def update_stats(login, offline):
     info["additions"] = sum(v["a"] for v in per_repo.values())
     info["deletions"] = sum(v["d"] for v in per_repo.values())
     info["loc"] = info["additions"] - info["deletions"]
+    print("  stats: " + ", ".join(f"{k}={v}" for k, v in info.items()))
     CACHE.parent.mkdir(exist_ok=True)
     CACHE.write_text(json.dumps({"summary": info, "repos": per_repo}, indent=2) + "\n",
                      encoding="utf-8")
