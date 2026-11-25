@@ -2,25 +2,15 @@
   "summary": {
     "created_at": "2021-07-15T14:44:53Z",
     "followers": 2,
-    "repos": 23,
+    "repos": 21,
     "stars": 7,
     "contributed": 0,
-    "commits": 148,
-    "additions": 7162968,
+    "commits": 147,
+    "additions": 7161781,
     "deletions": 7077064,
-    "loc": 85904
+    "loc": 84717
   },
   "repos": {
-    "yugalrk/ds-cheatsheets": {
-      "c": 0,
-      "a": 0,
-      "d": 0
-    },
-    "yugalrk/project-based-learning": {
-      "c": 0,
-      "a": 0,
-      "d": 0
-    },
     "yugalrk/Colab-work": {
       "c": 3,
       "a": 2081,
@@ -76,6 +66,11 @@
       "a": 3331,
       "d": 376
     },
+    "yugalrk/project-based-learning": {
+      "c": 0,
+      "a": 0,
+      "d": 0
+    },
     "yugalrk/RemoteScanning": {
       "c": 13,
       "a": 6397,
@@ -99,11 +94,6 @@
     "yugalrk/RSU": {
       "c": 4,
       "a": 1336,
-      "d": 0
-    },
-    "yugalrk/RSU-3": {
-      "c": 1,
-      "a": 1187,
       "d": 0
     },
     "yugalrk/siemens_chatbot": {
